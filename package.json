@@ -10,7 +10,10 @@
   "author": "HARIKRISHNAN G",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^17.2.2",
+    "ejs": "^3.1.10",
     "express": "^5.1.0",
+    "method-override": "^3.0.0",
     "mongoose": "^8.18.2",
     "nodemon": "^3.1.10"
   }

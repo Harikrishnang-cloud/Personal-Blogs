@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title><%= title || 'Edit Blog' %></title>
+  <style>
+    body { font-family: system-ui, Arial, sans-serif; margin: 2rem; }
+    label { display:block; margin:.5rem 0 .25rem; }
+    input, textarea { width: 100%; padding:.5rem; }
+    button { margin-top: 1rem; padding:.5rem .75rem; }
+  </style>
+</head>
+<body>
+  <h1>Edit Blog</h1>
+  <form action="/<%= post._id %>?_method=PUT" method="POST">
+    <label for="title">Title</label>
+    <input id="title" name="title" value="<%= (post && post.title) || '' %>" required />
+
+    <label for="body">Body</label>
+    <textarea id="body" name="body" rows="8" required><%= (post && post.body) || '' %></textarea>
+
+    <button type="submit">Update</button>
+  </form>
+</body>
+</html>
