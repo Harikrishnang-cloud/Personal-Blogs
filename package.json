@@ -1,0 +1,17 @@
+{
+  "name": "personal-blog-backend-and-frondend",
+  "version": "1.0.0",
+  "description": "My Personal Blog => This is a new side project both backend and frondend",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon src/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "HARIKRISHNAN G",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.1.0",
+    "mongoose": "^8.18.2",
+    "nodemon": "^3.1.10"
+  }
+}
