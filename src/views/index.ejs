@@ -5,10 +5,80 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title><%= title || 'PersonalBlog' %></title>
   <style>
-    body { font-family: system-ui, Arial, sans-serif; margin: 2rem; }
-    header, footer { margin-bottom: 1rem; }
-    .post { padding: 1rem; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 1rem; }
-    a.button { display: inline-block; padding: 0.5rem 0.75rem; background: #0d6efd; color: #fff; text-decoration: none; border-radius: 6px; }
+    /* Sticky footer setup */
+    html, body { height: 100%; }
+    body {
+      font-family: system-ui, Arial, sans-serif;
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 2rem;
+      background-image: url('/photos/bg-image3.jpg');
+      background-size: cover;
+    }
+    main { flex: 1; }
+    header, footer { 
+      margin-bottom: 1rem; 
+    }
+    /* Grid for posts */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      column-gap: 2rem; /* horizontal gap */
+      row-gap: 1rem;    /* vertical gap */
+      align-items: stretch;
+    }
+    @media (max-width: 1024px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 640px) { .grid { grid-template-columns: 1fr; } }
+    .post { 
+      padding: 1rem 1.25rem;
+      border: 1px solid #e5e7eb; 
+      border-radius: 12px; 
+      background: #ffffff;
+      height: 100%;
+      display: flex; flex-direction: column; justify-content: space-between;
+      box-shadow: 0 8px 18px rgba(0,0,0,0.06);
+      transition: transform .12s ease, box-shadow .2s ease, border-color .2s ease;
+    }
+    .post:hover { transform: translateY(-3px); box-shadow: 0 14px 30px rgba(0,0,0,0.12); border-color: #d1d5db; }
+    .post h3 { margin: 0 0 .5rem; font-weight: 700; font-size: 1.1rem; }
+    .post h3 a { color: #111827; text-decoration: none; }
+    .post h3 a:hover { color: #0d6efd; text-decoration: underline; }
+    .post p { margin: 0 0 .75rem; color: #4b5563; line-height: 1.45; display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .post small { color: #6b7280; }
+    .actions { margin-top: .75rem; display: flex; gap: .5rem; align-items: center; }
+    a.button { 
+      display: inline-block; 
+      padding: 0.5rem 0.75rem; 
+      background: #0d6efd; 
+      color: #fff; 
+      text-decoration: none; 
+      border-radius: 6px; 
+    }
+    a.button:hover { background: #0b5ed7; box-shadow: 0 6px 16px rgba(13,110,253,0.25); }
+    /* Danger styled delete button */
+    button.delete-btn {
+      padding: 0.45rem 0.75rem;
+      background: #ef4444; /* red-500 */
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color .2s ease, transform .06s ease, box-shadow .2s ease;
+      box-shadow: 0 6px 14px rgba(239,68,68,0.25);
+    }
+    button.delete-btn:hover { 
+      background: #dc2626; 
+      transform: translateY(-1px); 
+    }
+    button.delete-btn:active { 
+      transform: translateY(0); 
+    }
+    button.delete-btn:focus { 
+      outline: 2px solid rgba(239,68,68,0.35); 
+      outline-offset: 2px; 
+    }
   </style>
 </head>
 <body>
@@ -23,24 +93,30 @@
     <% if ((posts || []).length === 0) { %>
       <p>No posts yet.</p>
     <% } else { %>
-      <% posts.forEach(function(post){ %>
-        <div class="post">
-          <h3><a href="/<%= post._id %>"><%= post.title %></a></h3>
-          <p><%= post.body %></p>
-          <small><%= new Date(post.createdAt).toLocaleString() %></small>
-          <div style="margin-top: .5rem;">
-            <a class="button" href="/<%= post._id %>/edit">Edit</a>
-            <form action="/<%= post._id %>?_method=DELETE" method="POST" style="display:inline-block; margin-left:.5rem;">
-              <button type="submit">Delete</button>
-            </form>
+      <div class="grid">
+        <% posts.forEach(function(post){ %>
+          <div class="post">
+            <div>
+              <h3><a href="/<%= post._id %>"><%= post.title %></a></h3>
+              <p><%= post.body %></p>
+            </div>
+            <div>
+              <small><%= new Date(post.createdAt).toLocaleString() %></small>
+              <div class="actions">
+                <a class="button" href="/<%= post._id %>/edit">Edit</a>
+                <form action="/<%= post._id %>?_method=DELETE" method="POST" style="display:inline-block;">
+                  <button class="delete-btn" type="submit">Delete</button>
+                </form>
+              </div>
+            </div>
           </div>
-        </div>
-      <% }) %>
+        <% }) %>
+      </div>
     <% } %>
   </main>
 
   <footer>
-    <small>&copy; <%= new Date().getFullYear() %> PersonalBlog</small>
+    <small>&copy; <%= new Date().getFullYear() %> PersonalBlog Developed by HariKrishnan G</small>
   </footer>
 </body>
 </html>

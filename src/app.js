@@ -5,6 +5,7 @@ const routes = require("./routes/blog")
 const path = require("path");
 const methodOverride = require("method-override");
 const mongoose = require("mongoose");
+const session = require("express-session");
 
 
 //Middle wares
@@ -15,6 +16,12 @@ app.use(express.static("public"))
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 app.use(methodOverride("_method"))
+// Session middleware (for auth)
+app.use(session({
+  secret: process.env.SESSION_SECRET || "dev-secret",
+  resave: false,
+  saveUninitialized: false,
+}))
 app.use("/",routes)
 
 

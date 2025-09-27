@@ -12,14 +12,27 @@ async function listPosts(req, res) {
   }
 }
 
-// GET /new - new form
-function newPostForm(req, res) {
-  res.render("new", { title: "New Blog", post: {} });
+// GET /new - new form with recent posts
+async function newPostForm(req, res) {
+  try {
+    const recent = await Blog.find().sort({ createdAt: -1 }).limit(3);
+    const isAuthed = Boolean(req.session && req.session.userId);
+    const userName = req.session && req.session.userName;
+    res.render("new", { title: "New Blog", post: {}, recent, isAuthed, userName });
+  } catch (err) {
+    console.error("Failed to load recent posts for new form", err);
+    const isAuthed = Boolean(req.session && req.session.userId);
+    const userName = req.session && req.session.userName;
+    res.render("new", { title: "New Blog", post: {}, recent: [], isAuthed, userName });
+  }
 }
 
 // POST / - create
 async function createPost(req, res) {
   try {
+    if (!req.session || !req.session.userId) {
+      return res.redirect("/new");
+    }
     const { title, body } = req.body;
     const post = new Blog({ title, body });
     await post.save();

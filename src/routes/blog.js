@@ -9,6 +9,7 @@ const {
     updatePost,
     deletePost,
 } = require("../controllers/blogController")
+const { register } = require("../controllers/authController")
 
 // Avoid ObjectId cast errors from browser favicon request
 router.get("/favicon.ico", (req, res) => res.status(204).end())
@@ -18,6 +19,9 @@ router.get("/", listPosts)
 
 //Create Get Route
 router.get("/new", newPostForm)
+
+// Register Route
+router.post("/register", register)
 
 //Edit Get Router
 router.get("/:id/edit", editPostForm)

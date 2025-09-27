@@ -3,24 +3,170 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title><%= title || 'New Blog' %></title>
+  <title><%= title || 'Personal Blog' %></title>
   <style>
-    body { font-family: system-ui, Arial, sans-serif; margin: 2rem; }
-    label { display:block; margin:.5rem 0 .25rem; }
-    input, textarea { width: 50%; padding:.5rem; }
-    button { margin-top: 1rem; padding:.5rem .75rem; }
+    body { 
+      font-family: system-ui, Arial, sans-serif;
+      margin: 2rem; 
+      text-align: center; 
+      background-image: url('/photos/bg-image3.jpg');
+      background-size: cover;
+      
+    }
+    label { 
+      display:block; 
+      margin:.5rem 0 .25rem; 
+    }
+    input, textarea {
+      width: min(90%, 560px);
+      padding: .85rem 1rem;
+      display: block;
+      margin: 0.25rem auto 0.75rem auto;
+      text-align: left;
+      border-radius: 12px;
+      border: 1px solid rgba(0,0,0,0.15);
+      background: rgba(255,255,255,0.92);
+      /*   */
+      box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+      outline: none;
+      transition: border-color .2s ease, box-shadow .2s ease, background-color .2s ease;
+      backdrop-filter: blur(4px);
+    }
+
+    input::placeholder, textarea::placeholder { 
+      color: #6b7280; 
+    }
+
+    input:focus, textarea:focus {
+      border-color: #0ea5e9; /* sky-500 */
+      box-shadow: 0 0 0 4px rgba(14,165,233,0.15), 0 8px 22px rgba(0,0,0,0.12);
+      background: #ffffff;
+    }
+
+    textarea {
+      min-height: 180px;
+      line-height: 1.5;
+      resize: vertical;
+    }
+    button { 
+      margin-top: 1rem; 
+      padding:.5rem .9rem; 
+      background: #0d6efd; 
+      color: #fff; 
+      border: none; 
+      border-radius: 6px; 
+      cursor: pointer; }
+    button:hover { 
+      background: #0b5ed7; 
+    }
+    /* Register card */
+    .register {
+      margin: 2rem auto 0 auto;
+      max-width: 640px;
+      text-align: left;
+      background: rgba(255,255,255,0.92);
+      padding: 1.25rem 3.5rem;
+      border-radius: 12px;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.10);
+    }
+    .register h2 { 
+      margin: 0 0 .75rem; 
+      font-size: 1.2rem; 
+    }
+    .register p { 
+      margin: 0 0 .75rem; 
+      color: #374151; 
+    }
+    .register .row { 
+      display: grid; 
+      grid-template-columns: 1fr; 
+      gap: .75rem; 
+    }
+    .register input { 
+      width: 100%; 
+    }
+    .muted { 
+      color: #6b7280; 
+    }
+    /* Recently added list */
+    .recent {
+      margin: 2rem auto 0 auto;
+      max-width: 800px;
+      text-align: left;
+      background: rgba(255,255,255,0.85);
+      padding: 1rem 1.25rem;
+      border-radius: 10px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+    }
+    .recent h2 { 
+      margin: 0 0 .75rem; 
+      font-size: 1.1rem; 
+    }
+    .recent-list { 
+      list-style: none; 
+      padding: 0; 
+      margin: 0; 
+    }
+    .recent-item { 
+      padding: .6rem 0; 
+      border-bottom: 1px solid rgba(0,0,0,0.08); 
+      display: flex; 
+      justify-content: space-between; 
+      gap: .75rem; 
+      align-items: baseline; 
+    }
+    .recent-item:last-child { border-bottom: none; }
+    .recent-item a { color: #0d6efd; text-decoration: none; font-weight: 600; }
+    .recent-item a:hover { text-decoration: underline; }
+    .recent-item time { color: #6b7280; font-size: .85rem; white-space: nowrap; }
   </style>
 </head>
 <body>
-  <h1>New Blog</h1>
-  <form action="/" method="POST">
-    <label for="title">Title</label>
-    <input id="title" name="title" value="<%= (post && post.title) || '' %>" required />
+  <h1>My Personal Blogs</h1>
 
-    <label for="body">Body</label>
-    <textarea id="body" name="body" rows="8" required><%= (post && post.body) || '' %></textarea>
+  <% if (!isAuthed) { %>
+    <section class="register">
+      <h2>Register to add blogs</h2>
+      <p class="muted">Create a quick account to start posting your thoughts.</p>
+      <form action="/register" method="POST">
+        <div class="row">
+          <div>
+            <label for="name">Your Name</label>
+            <input id="name" name="name" placeholder="e.g. my name is hari..." required />
+          </div>
+          <div>
+            <label for="email">Email</label>
+            <input id="email" type="email" name="email" placeholder="hari@gmail.com" required />
+          </div>
+        </div>
+        <button type="submit" style="margin-top:1rem">Register</button>
+      </form>
+    </section>
+  <% } else { %>
+    <p class="muted">Welcome, <strong><%= userName || 'User' %></strong>! Share your latest thoughts below.</p>
+    <form action="/" method="POST">
+      <label for="title">Title</label>
+      <input id="title" name="title" value="<%= (post && post.title) || '' %>" required />
 
-    <button type="submit">Create</button>
-  </form>
+      <label for="body">My Thoughts</label>
+      <textarea id="body" name="body" rows="8" required><%= (post && post.body) || '' %></textarea>
+
+      <button type="submit">Create</button>
+    </form>
+  <% } %>
+
+  <% if (Array.isArray(recent) && recent.length) { %>
+    <section class="recent">
+      <h2>Recently added</h2>
+      <ul class="recent-list">
+        <% recent.forEach(function(p){ %>
+          <li class="recent-item">
+            <a href="/<%= p._id %>"><%= p.title %></a>
+            <time><%= new Date(p.createdAt).toLocaleString() %></time>
+          </li>
+        <% }) %>
+      </ul>
+    </section>
+  <% } %>
 </body>
 </html>
