@@ -7,7 +7,6 @@ async function listPosts(req, res) {
     const posts = await Blog.find().sort({ createdAt: -1 });
     res.render("index", { title: "PersonalBlog", posts });
   } catch (err) {
-    console.error("Failed to load posts", err);
     res.status(500).send("Failed to load posts");
   }
 }
