@@ -22,7 +22,13 @@
 <body>
   <a class="button" href="/">Back</a>
   <h1><%= (post && post.title) || 'Untitled' %></h1>
+  <small>Author: <%= post && post.author ? post.author.name : 'Unknown' %></small>
   <p><%= (post && post.body) || '' %></p>
   <small><%= post && post.createdAt ? new Date(post.createdAt).toLocaleString() : '' %></small>
+
+  <a class="button" href="/post/<%= post._id %>/edit">Edit</a>
+  <form action="/post/<%= post._id %>/delete" method="POST">
+    <button type="submit">Delete</button>
+  </form>
 </body>
 </html>

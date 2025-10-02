@@ -7,6 +7,7 @@ async function listPosts(req, res) {
     const posts = await Blog.find().sort({ createdAt: -1 });
     res.render("index", { title: "PersonalBlog", posts });
   } catch (err) {
+    console.error("Failed to load posts", err);
     res.status(500).send("Failed to load posts");
   }
 }
@@ -33,7 +34,7 @@ async function createPost(req, res) {
       return res.redirect("/new");
     }
     const { title, body } = req.body;
-    const post = new Blog({ title, body });
+    const post = new Blog({ title, body, author: req.session.userId });
     await post.save();
     res.redirect("/");
   } catch (err) {
@@ -49,7 +50,7 @@ async function showPost(req, res) {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(404).send("Post not found");
     }
-    const post = await Blog.findById(id);
+    const post = await Blog.findById(id).populate('author');
     if (!post) return res.status(404).send("Post not found");
     res.render("show", { title: "Blog details", post });
   } catch (err) {
